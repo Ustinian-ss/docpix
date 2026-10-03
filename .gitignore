@@ -1,0 +1,26 @@
+# ---------------------------------------------------------------- Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+build/
+dist/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ------------------------------------------------- 运行时数据（不进版本库）
+var/
+.cache/
+.tmp/
+
+# 外部引擎：用 tools/fetch_engines.ps1 下载到 bin/，约 1.6 GB
+bin/
+
+# ------------------------------------------------------------ 个人/本地
+.env
+*.local
+*.log
+Thumbs.db
+desktop.ini

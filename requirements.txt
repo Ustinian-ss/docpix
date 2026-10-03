@@ -1,0 +1,20 @@
+# docpix 核心依赖 —— 全部为 MIT / BSD / Apache-2.0 / MPL-2.0 宽松许可
+# 安装目标：F:\projects\docpix\.venv （不占用 C 盘）
+
+fastapi>=0.115
+uvicorn[standard]>=0.32
+python-multipart>=0.0.12
+pydantic>=2.9
+
+# 图片：Pillow (MIT-CMU) + pillow-heif (BSD-3) 提供 WebP / AVIF / HEIC 读写
+Pillow>=11.0
+pillow-heif>=0.18
+
+# PDF：pypdf (BSD-3) + pikepdf (MPL-2.0) + pypdfium2 (Apache-2.0/BSD)
+pypdf>=5.1
+pikepdf>=9.4
+pypdfium2>=4.30
+reportlab>=4.2
+
+# 开发/测试用（pytest + httpx，见 pyproject.toml 的 dev extra）
+#   .\.venv\Scripts\python.exe -m pip install -e ".[dev]"

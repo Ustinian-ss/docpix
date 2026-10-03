@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>docpix · 本地文档与图片处理</title>
+<link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+<!-- ------------------------------------------------------------ 顶栏 -->
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-name">docpix</span>
+    <span class="badge" id="version-badge">v—</span>
+    <span class="badge badge-license" title="本项目以 MIT 许可发布">MIT</span>
+  </div>
+  <nav class="tabs" id="tabs" aria-label="功能导航">
+    <button type="button" class="tab" data-tab="image">图片</button>
+    <button type="button" class="tab" data-tab="pdf">PDF</button>
+    <button type="button" class="tab" data-tab="convert">转换</button>
+    <button type="button" class="tab" data-tab="ocr">OCR</button>
+    <button type="button" class="tab" data-tab="jobs">任务</button>
+    <button type="button" class="tab" data-tab="system">系统</button>
+  </nav>
+  <div class="topbar-right">
+    <button type="button" class="btn ghost small" id="selfcheck-btn">系统自检</button>
+  </div>
+</header>
+
+<main class="main">
+  <noscript>
+    <div class="alert danger">docpix 前端需要启用 JavaScript 才能使用。</div>
+  </noscript>
+
+  <!-- -------------------------------------------------------- 图片页 -->
+  <section class="page" id="page-image" data-page="image">
+    <div class="panel">
+      <h2 class="panel-title">图片处理</h2>
+      <p class="panel-desc">拖拽或点击选择图片，可多选。文件按上传顺序处理。</p>
+      <div class="dropzone" id="dz-image" tabindex="0" role="button" aria-label="选择图片文件">
+        <div class="dz-icon" aria-hidden="true">🖼</div>
+        <div class="dz-main">拖拽图片到此处，或点击选择</div>
+        <div class="dz-sub" id="dz-image-sub">支持 JPG / PNG / WebP / AVIF / HEIC / BMP / GIF / TIFF / ICO</div>
+        <input type="file" id="input-image" multiple accept="image/*" hidden>
+      </div>
+      <div class="filelist-head">
+        <span class="muted small" id="summary-image">尚未选择文件</span>
+        <button type="button" class="btn ghost small" id="clear-image">清空</button>
+      </div>
+      <ul class="filelist" id="list-image"></ul>
+    </div>
+    <div class="panel">
+      <div class="op-bar">
+        <label class="field inline">
+          <span class="field-label">操作</span>
+          <select class="select" id="op-image"></select>
+        </label>
+        <p class="op-hint" id="hint-image"></p>
+      </div>
+      <div class="params" id="form-image"></div>
+      <div class="actions">
+        <button type="button" class="btn primary" id="submit-image">提交任务</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------------------------------------------------------- PDF 页 -->
+  <section class="page" id="page-pdf" data-page="pdf">
+    <div class="panel">
+      <h2 class="panel-title">PDF 处理</h2>
+      <p class="panel-desc">拖拽或点击选择 PDF，可多选。合并时文件顺序即合并顺序，可用上下箭头调整。</p>
+      <div class="dropzone" id="dz-pdf" tabindex="0" role="button" aria-label="选择 PDF 文件">
+        <div class="dz-icon" aria-hidden="true">📄</div>
+        <div class="dz-main">拖拽 PDF 到此处，或点击选择</div>
+        <div class="dz-sub">仅支持 .pdf；单文件最大 2 GB</div>
+        <input type="file" id="input-pdf" multiple accept=".pdf,application/pdf" hidden>
+      </div>
+      <div class="filelist-head">
+        <span class="muted small" id="summary-pdf">尚未选择文件</span>
+        <button type="button" class="btn ghost small" id="clear-pdf">清空</button>
+      </div>
+      <ul class="filelist" id="list-pdf"></ul>
+    </div>
+    <div class="panel">
+      <div class="op-bar">
+        <label class="field inline">
+          <span class="field-label">操作</span>
+          <select class="select" id="op-pdf"></select>
+        </label>
+        <p class="op-hint" id="hint-pdf"></p>
+      </div>
+      <div class="params" id="form-pdf"></div>
+      <div class="actions">
+        <button type="button" class="btn primary" id="submit-pdf">提交任务</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- --------------------------------------------------------- 转换页 -->
+  <section class="page" id="page-convert" data-page="convert">
+    <div class="panel">
+      <h2 class="panel-title">格式转换</h2>
+      <p class="panel-desc">Office 文档、PDF、Markdown / HTML / EPUB 等格式互转。可多选，目标格式按第一个文件的扩展名过滤。</p>
+      <div class="dropzone" id="dz-convert" tabindex="0" role="button" aria-label="选择待转换文件">
+        <div class="dz-icon" aria-hidden="true">🔁</div>
+        <div class="dz-main">拖拽文件到此处，或点击选择</div>
+        <div class="dz-sub" id="dz-convert-sub">支持 Word / Excel / PPT / ODF / PDF / Markdown / HTML / EPUB 等</div>
+        <input type="file" id="input-convert" multiple hidden>
+      </div>
+      <div class="filelist-head">
+        <span class="muted small" id="summary-convert">尚未选择文件</span>
+        <button type="button" class="btn ghost small" id="clear-convert">清空</button>
+      </div>
+      <ul class="filelist" id="list-convert"></ul>
+    </div>
+    <div class="panel">
+      <div class="op-bar">
+        <div class="field inline">
+          <span class="field-label">源</span>
+          <span class="readonly" id="convert-source">请先选择文件</span>
+        </div>
+        <label class="field inline">
+          <span class="field-label">目标格式</span>
+          <select class="select" id="convert-target"></select>
+        </label>
+      </div>
+      <p class="op-hint" id="hint-convert">需要 LibreOffice；Markdown / HTML / EPUB 等标记语言由 Pandoc 处理（缺失时自动回退）。</p>
+      <div class="actions">
+        <button type="button" class="btn primary" id="submit-convert">提交任务</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------------------------------------------------------- OCR 页 -->
+  <section class="page" id="page-ocr" data-page="ocr">
+    <div class="panel">
+      <h2 class="panel-title">OCR 文字识别</h2>
+      <p class="panel-desc">上传 PDF 或图片，输出可搜索 PDF（含文本层）或纯文本。依赖 Tesseract 引擎与语言包。</p>
+      <div class="dropzone" id="dz-ocr" tabindex="0" role="button" aria-label="选择 PDF 或图片">
+        <div class="dz-icon" aria-hidden="true">🔍</div>
+        <div class="dz-main">拖拽 PDF / 图片到此处，或点击选择</div>
+        <div class="dz-sub">支持 .pdf 与常见图片格式</div>
+        <input type="file" id="input-ocr" multiple hidden>
+      </div>
+      <div class="filelist-head">
+        <span class="muted small" id="summary-ocr">尚未选择文件</span>
+        <button type="button" class="btn ghost small" id="clear-ocr">清空</button>
+      </div>
+      <ul class="filelist" id="list-ocr"></ul>
+    </div>
+    <div class="panel">
+      <h3 class="panel-subtitle">识别语言</h3>
+      <p class="panel-desc">已安装的语言排在前面。可多选（例如「简体中文 + English」）。</p>
+      <div class="langs" id="ocr-langs"></div>
+      <p class="hint-warn" id="ocr-lang-note" hidden></p>
+      <details class="advanced">
+        <summary>高级选项</summary>
+        <div class="params" id="form-ocr"></div>
+      </details>
+      <div class="actions">
+        <button type="button" class="btn primary" id="submit-ocr">提交任务</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- --------------------------------------------------------- 任务页 -->
+  <section class="page" id="page-jobs" data-page="jobs">
+    <div class="panel">
+      <div class="panel-head">
+        <h2 class="panel-title">任务</h2>
+        <div class="panel-head-actions">
+          <span class="muted small" id="jobs-poll-note">自动刷新中…</span>
+          <button type="button" class="btn ghost small" id="jobs-refresh">立即刷新</button>
+        </div>
+      </div>
+      <div class="jobs" id="jobs-list"></div>
+    </div>
+  </section>
+
+  <!-- --------------------------------------------------------- 系统页 -->
+  <section class="page" id="page-system" data-page="system">
+    <div class="panel" id="system-overview"></div>
+    <div class="panel" id="system-engines-panel"></div>
+    <div class="panel" id="system-ocr-panel"></div>
+    <div class="panel" id="system-notes"></div>
+  </section>
+</main>
+
+<!-- 右上角错误 / 提示条 -->
+<div class="toasts" id="toasts" aria-live="polite" aria-atomic="false"></div>
+
+<!-- 预览模态框 -->
+<div class="modal-root" id="modal-root" hidden></div>
+
+<script type="module" src="/static/js/app.js"></script>
+</body>
+</html>

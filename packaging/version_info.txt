@@ -1,0 +1,29 @@
+# Windows 可执行文件版本资源（PyInstaller 读取）。
+# 改版本号时记得和 app/__init__.py、pyproject.toml 一起改。
+VSVersionInfo(
+  ffi=FixedFileInfo(
+    filevers=(1, 0, 0, 0),
+    prodvers=(1, 0, 0, 0),
+    mask=0x3F,
+    flags=0x0,
+    OS=0x40004,
+    fileType=0x1,
+    subtype=0x0,
+    date=(0, 0),
+  ),
+  kids=[
+    StringFileInfo([
+      StringTable('080404B0', [
+        StringStruct('CompanyName', 'docpix'),
+        StringStruct('FileDescription', 'docpix —— 本地文档转换与图片处理服务'),
+        StringStruct('FileVersion', '1.0.0.0'),
+        StringStruct('InternalName', 'docpix'),
+        StringStruct('LegalCopyright', 'MIT License'),
+        StringStruct('OriginalFilename', 'docpix.exe'),
+        StringStruct('ProductName', 'docpix'),
+        StringStruct('ProductVersion', '1.0.0.0'),
+      ]),
+    ]),
+    VarFileInfo([VarStruct('Translation', [0x0804, 1200])]),
+  ],
+)

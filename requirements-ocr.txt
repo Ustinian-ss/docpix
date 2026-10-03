@@ -1,0 +1,10 @@
+# docpix OCR 依赖（可选安装）
+#
+# ocrmypdf (MPL-2.0)：把扫描件 PDF 变成「可搜索 PDF」，运行时需要系统内
+#   存在 tesseract 可执行文件（见 tools/fetch_tesseract.ps1）。
+#
+# 说明：原本还计划用 rapidocr-onnxruntime 作为纯 Python 后备 OCR，
+#   但它要求 Python < 3.13（本机为 3.13.13），因此不作为默认依赖。
+#   若将来需要纯 Python 方案，可改用支持 3.13 的 `rapidocr` 包，
+#   并在 app/engines/ocr.py 中补一个后端实现。
+ocrmypdf>=16.8

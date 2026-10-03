@@ -1,0 +1,21 @@
+# 默认按文本处理，仓库里统一存 LF
+* text=auto
+
+# PowerShell 脚本必须原样保存：Windows PowerShell 5.1 只认 UTF-8 **带 BOM**，
+# 且不能被换成 LF（-text = 不做任何行尾/BOM 转换）。
+*.ps1 -text
+*.bat -text
+*.cmd -text
+
+# 二进制资源
+*.ico binary
+*.png binary
+*.jpg binary
+*.zip binary
+*.exe binary
+*.dll binary
+*.pyd binary
+
+# 生成物/数据不参与 diff 统计
+var/** -diff
+.cache/** -diff

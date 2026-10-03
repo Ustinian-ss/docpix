@@ -1,0 +1,71 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "docpix"
+version = "1.0.0"
+description = "本地优先的文档 / 图片转换服务：图片处理、PDF 处理、Office 互转、Markdown 转 PDF、OCR"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "docpix" }]
+keywords = ["pdf", "image", "libreoffice", "pandoc", "tesseract", "ocr", "fastapi"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Web Environment",
+    "Framework :: FastAPI",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: Microsoft :: Windows",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Multimedia :: Graphics :: Graphics Conversion",
+    "Topic :: Text Processing",
+]
+
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.32",
+    "python-multipart>=0.0.12",
+    "pydantic>=2.9",
+    "Pillow>=11.0",
+    "pillow-heif>=0.18",
+    "pypdf>=5.1",
+    "pikepdf>=9.4",
+    "pypdfium2>=4.30",
+    "reportlab>=4.2",
+]
+
+[project.optional-dependencies]
+# OCR 需要系统里存在 tesseract（见 tools/fetch_tesseract.ps1）
+ocr = ["ocrmypdf>=16.8"]
+dev = ["pytest>=8.0", "httpx>=0.27", "ruff>=0.6"]
+
+[project.scripts]
+docpix = "app.main:main"
+
+[project.urls]
+Homepage = "https://example.invalid/docpix"
+
+[tool.setuptools]
+packages = ["app", "app.engines", "app.routers"]
+include-package-data = true
+
+[tool.setuptools.package-data]
+app = ["static/*", "static/css/*", "static/js/*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q --strict-markers --basetemp=.tmp/pytest"
+markers = [
+    "engines: 需要外部引擎（LibreOffice / Pandoc / Tesseract）",
+]
+
+[tool.ruff]
+line-length = 110
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "C4"]
+ignore = ["E501", "B008"]
