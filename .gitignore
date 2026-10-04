@@ -24,3 +24,6 @@ bin/
 *.log
 Thumbs.db
 desktop.ini
+
+# 端到端验证素材（由 tests/e2e/make_fixtures.py 生成）
+tests/e2e/fixtures/

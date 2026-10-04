@@ -184,6 +184,7 @@ docpix/
 ├─ var/jobs/<id>/        任务数据：meta.json + in/ + out/
 ├─ tools/                env / fetch_engines / fetch_tesseract / build_exe / make_icon
 ├─ tests/                pytest（86 个用例）
+│  └─ e2e/               端到端工具：make_fixtures / exe_smoke / ui_e2e（手工跑）
 ├─ docpix.spec           PyInstaller 打包配置
 ├─ CHANGELOG.md          版本更新日志
 └─ THIRD_PARTY_NOTICES.md
@@ -221,6 +222,20 @@ docpix 本体是 **MIT**（见 [LICENSE](LICENSE)）。为了守住这一点：
   的操作/表单定义，防止后端加了能力而前端没有入口。
 * `tests/test_api.py` 用 `TestClient` 跑真实的上传 → 任务 → 下载闭环。
 * `tests/test_engines.py` 标记为 `engines`，引擎缺失时自动 skip。
+
+上面都是**单元测试**。另有一套**真跑一遍**的端到端工具在 `tests/e2e/`
+（不被 pytest 收集，手工执行），发版前务必跑一次：
+
+```powershell
+.\.venv\Scripts\python.exe tests\e2e\make_fixtures.py                     # 生成素材
+.\.venv\Scripts\python.exe tests\e2e\exe_smoke.py --base-url http://127.0.0.1:8765
+.\.venv\Scripts\python.exe tests\e2e\exe_smoke.py --launch dist\docpix --engines   # 打打包产物
+node tests\e2e\ui_e2e.mjs                                                 # 无头 Edge 真点界面
+```
+
+`exe_smoke.py` 覆盖图片互转、`to_ico`、HEIC 解码、多图拼接、`md→pdf`（两跳链路）、
+PDF 预览 / 合并 / 转图片，以及 OCR **两条**链路（图片走 tesseract、PDF 走 ocrmypdf
+—— 后者正是冻结环境里最容易坏的一条）。详见 `tests/e2e/README.md`。
 
 ---
 
