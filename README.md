@@ -279,3 +279,29 @@ docpix 本体是 **MIT**（见 [LICENSE](LICENSE)）。为了守住这一点：
     而且 `>` 与 `Tee-Object` 默认把日志写成 UTF-16。构建脚本里统一走一个包装函数：
     临时改 `Continue`、`Out-String` 收走输出、`Out-File -Encoding utf8` 落盘、
     只 `return $LASTEXITCODE`（否则返回值里混进输出行，`-ne 0` 永远成立）。
+
+---
+
+## 9. 发布流程（维护者）
+
+```powershell
+# 1. 改版本号（三处保持一致）
+#    app\__init__.py 的 __version__
+#    pyproject.toml 的 version
+#    packaging\version_info.txt 的 filevers / ProductVersion
+# 2. 更新 CHANGELOG.md
+# 3. 跑测试
+.\.venv\Scripts\python.exe -m pytest
+# 4. 构建发布物
+.\tools\build_exe.ps1
+# 5. 冒烟：解压 dist\docpix\ 到干净目录，双击 docpix.exe 试一遍图片/转换/OCR
+# 6. 提交 + 打标签 + 推送
+git add -A; git commit -m "release: vX.Y.Z"; git tag -a vX.Y.Z -m "docpix vX.Y.Z"
+git push origin main; git push origin vX.Y.Z
+# 7. 建 Release 并挂上压缩包
+gh release create vX.Y.Z "dist\docpix-vX.Y.Z-win64.zip" --title "docpix vX.Y.Z" --notes-file CHANGELOG.md --verify-tag
+```
+
+发布前建议在**干净的临时目录**里跑一遍 `exe_e2e` 那类检查（图片互转、`to_ico`、
+`md→pdf`、OCR、PDF 预览各一发）。漏收本地库不会在构建时报错，只在用到
+HEIC 或 PDF 预览时才炸 —— 详见第 8 节第 14 条。
